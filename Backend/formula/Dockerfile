@@ -1,4 +1,4 @@
-FROM maven:3.5.0-jdk-21-slim AS builder
+FROM maven:3-jdk-21 AS builder
 
 WORKDIR /app
 
