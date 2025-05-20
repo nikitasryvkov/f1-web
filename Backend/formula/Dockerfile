@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk17:alpine AS build
+FROM adoptopenjdk/openjdk21:alpine AS build
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 
-FROM openjdk:17-jre-slim
+FROM openjdk:21-jre-slim
 
 COPY --from=build /app/target/dependency/BOOT-INF/lib /app/lib
 COPY --from=build /app/target/dependency/META-INF /app/META-INF
