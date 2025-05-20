@@ -1,17 +1,14 @@
 FROM openjdk:21-jdk-slim AS builder
 WORKDIR /app
 
-RUN apk add maven
+RUN apt update && apt install -y maven dos2unix
 
 COPY pom.xml .
 
-RUN mvn -N io.takari:maven:wrapper
-
+COPY .mvn/ .mvn
 COPY mvnw .
 
-RUN dos2unix mvnw
-
-RUN chmod +x mvnw
+RUN dos2unix mvnw && chmod +x mvnw
 
 RUN ./mvnw dependency:go-offline -B
 
