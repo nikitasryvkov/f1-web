@@ -11,12 +11,15 @@ services:
         build:
             context: ./Backend/formula
             dockerfile: Dockerfile
-            target: builder
+            networks:
+                - app-network
 
     frontend:
         build:
             context: ./Frontend
             dockerfile: Dockerfile
+            networks:
+                - app-network
 
     db:
         image: postgres:latest

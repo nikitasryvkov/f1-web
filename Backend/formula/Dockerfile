@@ -1,28 +1,33 @@
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM adoptopenjdk/openjdk17:alpine AS build
+
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y maven dos2unix && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add maven
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
+COPY pom.xml .
 
-RUN dos2unix mvnw && chmod +x mvnw
+RUN mvn -N io.takari:maven:wrapper
+
+COPY mvnw .
+
+RUN dos2unix mvnw
+
+RUN chmod +x mvnw
 
 RUN ./mvnw dependency:go-offline -B
 
 COPY src src
 
-RUN ./mvnw package -DskipTests && \
-    mkdir -p target/dependency && \
-    (cd target/dependency; jar -xf ../*.jar)
+RUN ./mvnw package -DskipTests
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM eclipse-temurin:21-jdk-jammy
-COPY --from=builder /app/target/dependency/BOOT-INF/lib /app/lib
-COPY --from=builder /app/target/dependency/META-INF /app/META-INF
-COPY --from=builder /app/target/dependency/BOOT-INF/classes /app
+
+FROM openjdk:17-jre-slim
+
+COPY --from=build /app/target/dependency/BOOT-INF/lib /app/lib
+COPY --from=build /app/target/dependency/META-INF /app/META-INF
+COPY --from=build /app/target/dependency/BOOT-INF/classes /app
 
 EXPOSE 8080
+
 ENTRYPOINT ["java", "-cp", "app:app/lib/*", "formula.formula.FormulaApplication"]
