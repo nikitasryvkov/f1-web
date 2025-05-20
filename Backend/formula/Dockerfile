@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-slim
+FROM eclipse-temurin:17-jre-slim
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 
-FROM eclipse-temurin:21-jre-slim
+FROM eclipse-temurin:17-jre-slim
 
 COPY --from=build /app/target/dependency/BOOT-INF/lib /app/lib
 COPY --from=build /app/target/dependency/META-INF /app/META-INF
