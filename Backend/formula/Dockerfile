@@ -4,16 +4,13 @@ WORKDIR /app
 RUN apt update && apt install -y maven dos2unix
 
 COPY pom.xml .
-
 COPY .mvn/ .mvn
 COPY mvnw .
 
 RUN dos2unix mvnw && chmod +x mvnw
 
 RUN ./mvnw dependency:go-offline -B
-
 COPY src src
-
 RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
