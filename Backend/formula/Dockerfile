@@ -2,6 +2,8 @@ FROM openjdk:21-jdk-slim AS builder
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
 COPY pom.xml .
 
 RUN mvn -N io.takari:maven:wrapper
