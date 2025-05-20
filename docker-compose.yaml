@@ -9,7 +9,8 @@ volumes:
 services:
   backend:
     build:
-      context: ./Backend
+      context: ./Backend/formula
+      dockerfile: Dockerfile
 
   frontend:
     build:
