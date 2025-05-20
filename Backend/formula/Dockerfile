@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-alpine AS builder
+FROM openjdk:21-jdk-slim AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ COPY ./src ./src
 RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM eclipse-temurin:21-jre-alpine AS runner
+FROM openjdk:21-jdk-slim
 
 COPY --from=builder /app/target/dependency/BOOT-INF/lib /app/lib
 COPY --from=builder /app/target/dependency/META-INF /app/META-INF
