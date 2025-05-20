@@ -11,15 +11,11 @@ services:
         build:
             context: ./Backend/formula
             dockerfile: Dockerfile
-        depends_on:
-            - frontend
 
     frontend:
         build:
             context: ./Frontend
             dockerfile: Dockerfile
-        depends_on:
-            - backend
 
     db:
         image: postgres:latest
