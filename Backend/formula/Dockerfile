@@ -2,6 +2,8 @@ FROM eclipse-temurin:21-jdk-alpine AS builder
 
 WORKDIR /app
 
+COPY pom.xml .
+
 RUN mvn -N io.takari:maven:wrapper
 
 COPY ./mvnw .
