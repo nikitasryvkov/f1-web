@@ -1,33 +1,14 @@
-FROM eclipse-temurin:21-jdk-alpine AS build
+# Stage 1: Build
+FROM eclipse-temurin:21-jdk-alpine as builder
 
 WORKDIR /app
+COPY . .
+RUN ./mvnw package -DskipTests
 
-RUN apk add maven
+# Stage 2: Run
+FROM eclipse-temurin:21-jre-alpine
 
-COPY pom.xml .
-
-RUN mvn -N io.takari:maven:wrapper
-
-COPY ./mvnw .
-
-RUN dos2unix ./mvnw
-
-RUN chmod +x ./mvnw
-
-RUN ./mvnw dependency:go-offline -B
-
-COPY ./src ./src
-
-# RUN ./mvnw package -DskipTests
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
-
-
-FROM eclipse-temurin:21-jre-alpine AS runner
-
-COPY --from=build /app/target/dependency/BOOT-INF/lib /app/lib
-COPY --from=build /app/target/dependency/META-INF /app/META-INF
-COPY --from=build /app/target/dependency/BOOT-INF/classes /app
-
+WORKDIR /app
+COPY --from=builder /app/target/*.jar ./app.jar
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-cp", "app:app/lib/*", "formula.formula.FormulaApplication"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
