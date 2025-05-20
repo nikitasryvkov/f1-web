@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk21:alpine AS build
+FROM eclipse-temurin:21-jre-alpine AS build
 
 WORKDIR /app
 

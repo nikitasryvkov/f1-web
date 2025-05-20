@@ -15,6 +15,7 @@ services:
   frontend:
     build:
       context: ./Frontend
+      dockerfile: Dockerfile
 
 
   db:
