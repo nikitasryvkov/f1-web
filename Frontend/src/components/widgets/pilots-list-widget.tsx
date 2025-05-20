@@ -4,7 +4,7 @@ import { PilotCard } from "../ui/pilot/pilot-card";
 import { PilotDto } from "../../dtos/pilot-dto";
 import { PilotStatus } from "../../entities/pilotStatus";
 import Title from "antd/es/typography/Title";
-import { Col } from "antd";
+// import { Col } from "antd";
 
 export interface IActivePilotsWidgets {
   lable?: string;
@@ -17,7 +17,7 @@ export const PilotListWidget: FC<IActivePilotsWidgets> = ({
   pilots,
   lable,
   onUpdate,
-  onPosition
+  onPosition,
 }) => {
   const onBlockUpdate = (id: string) => {
     onUpdate?.(pilots.find((p) => p.id === id)!);
@@ -32,10 +32,23 @@ export const PilotListWidget: FC<IActivePilotsWidgets> = ({
 
   return (
     <>
-      <Title style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16}}>{lable}</Title>
+      <Title
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: 16,
+        }}
+      >
+        {lable}
+      </Title>
 
       {pilots.map((p) => (
-        <PilotCard pilot={p} onStateChange={onBlockUpdate} onPosition={onPositionState} key={p.id} />
+        <PilotCard
+          pilot={p}
+          onStateChange={onBlockUpdate}
+          onPosition={onPositionState}
+          key={p.id}
+        />
       ))}
     </>
   );

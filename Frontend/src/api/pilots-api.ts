@@ -1,5 +1,5 @@
 import { PilotDto } from "../dtos/pilot-dto";
-import { PilotStatusDto } from "../dtos/pilot-status-dto";
+// import { PilotStatusDto } from "../dtos/pilot-status-dto";
 import { Pilot } from "../entities/pilot";
 import { PilotStatus } from "../entities/pilotStatus";
 // import { Pilot } from "../entities/pilot";
@@ -48,8 +48,13 @@ export const makeUnBlockedPilot = async (id: string): Promise<void> => {
   return data.data;
 };
 
-export const changePosition = async (id: string, status: PilotStatus): Promise<void> => {
-  const data = await http.post(`${BASE_PATH}/status/update/${id}?status=${encodeURIComponent(status)}`);
+export const changePosition = async (
+  id: string,
+  status: PilotStatus
+): Promise<void> => {
+  const data = await http.post(
+    `${BASE_PATH}/status/update/${id}?status=${encodeURIComponent(status)}`
+  );
 
   return data.data;
 };
