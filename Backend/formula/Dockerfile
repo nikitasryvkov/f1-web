@@ -19,10 +19,10 @@ RUN ./mvnw dependency:go-offline -B
 COPY src src
 
 RUN ./mvnw package -DskipTests
-# RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre-alpine AS runner
 
 COPY --from=build /app/target/dependency/BOOT-INF/lib /app/lib
 COPY --from=build /app/target/dependency/META-INF /app/META-INF
