@@ -11,15 +11,15 @@ services:
         build:
             context: ./Backend/formula
             dockerfile: Dockerfile
-        networks:
-            - app-network
+        depends_on:
+            - frontend
 
     frontend:
         build:
             context: ./Frontend
             dockerfile: Dockerfile
-        networks:
-            - app-network
+        depends_on:
+            - backend
 
     db:
         image: postgres:latest
