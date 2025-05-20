@@ -1,15 +1,22 @@
 FROM openjdk:21-jdk-slim AS builder
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y maven
+RUN apk add maven
 
 COPY pom.xml .
+
 RUN mvn -N io.takari:maven:wrapper
+
 COPY mvnw .
+
 RUN dos2unix mvnw
+
 RUN chmod +x mvnw
+
 RUN ./mvnw dependency:go-offline -B
+
 COPY src src
+
 RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
