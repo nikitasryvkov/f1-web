@@ -1,12 +1,14 @@
-FROM maven:3.8.1-jdk-11-slim AS builder
+FROM maven:3.8.7-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
 COPY ./ ./
 
 RUN mvn clean package -DskipTests
+RUN mkdir -p /app/target/dependency
+RUN cd /app/target/dependency && jar -xf ../*.jar
 
-FROM openjdk:11-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
