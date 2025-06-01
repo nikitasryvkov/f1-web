@@ -20,44 +20,6 @@ export interface IPilotFormCreate {
   onSuccess?: () => void;
 }
 
-// const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-//   try {
-//     setLoading(true);
-//     await createPilot(values as PilotDto);
-//     form.resetFields();
-//   } catch (error) {
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-// const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-//   console.log('Failed:', errorInfo);
-// };
-
-// const [form] = Form.useForm();
-// const [teams, setTeams] = useState<TeamDto[]>([]);
-// const [countries, setCountries] = useState<Country[]>([]);
-// const [loading, setLoading] = useState(false);
-
-// useEffect(() => {
-//   const loadData = async () => {
-//     try {
-//       setLoading(true);
-//       const [teamsData, countriesData] = await Promise.all([
-//         fetchTeams(),
-//         findAllCountries()
-//       ]);
-//       setTeams(teamsData);
-//       setCountries(countriesData);
-//     } catch (error) {
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-//   loadData();
-// }, []);
-
 export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -75,7 +37,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
         setTeams(teamsData);
         setCountries(countriesData);
       } catch (error) {
-        console.error("Failed to load data:", error);
+        console.error("Ошибка:", error);
       } finally {
         setLoading(false);
       }
@@ -92,15 +54,11 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
         onSuccess();
       }
     } catch (error) {
-      console.error("Failed to create pilot:", error);
+      console.error("Ошибка:", error);
     } finally {
       setLoading(false);
     }
   };
-
-  // const onFinishFailed = (errorInfo: any) => {
-  //   console.log('Failed:', errorInfo);
-  // };
 
   return (
     <Form
@@ -111,14 +69,12 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       style={{ padding: "0 16px", maxWidth: "100%" }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      // onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      {/* Form items for firstName, secondName, status, teamId, countryId, number */}
       <Form.Item<FieldType>
         label="First name"
         name="firstName"
-        rules={[{ required: true, message: "Please input your first name!" }]}
+        rules={[{ required: true, message: "Заполните имя пилота!" }]}
       >
         <Input />
       </Form.Item>
@@ -126,7 +82,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Second name"
         name="secondName"
-        rules={[{ required: true, message: "Please input your second name!" }]}
+        rules={[{ required: true, message: "Заполните фамилию пилота!" }]}
       >
         <Input />
       </Form.Item>
@@ -134,7 +90,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Status"
         name="status"
-        rules={[{ required: true, message: "Please input your status!" }]}
+        rules={[{ required: true, message: "Заполните статус пилота (FIRST, SECOND, RESERVE)!" }]}
       >
         <Input />
       </Form.Item>
@@ -142,7 +98,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Team"
         name="teamId"
-        rules={[{ required: true }]}
+        rules={[{ required: true, message: "Команда обязательна!" }]}
       >
         <Select
           loading={loading}
@@ -156,7 +112,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Country"
         name="countryId"
-        rules={[{ required: true }]}
+        rules={[{ required: true, message: "Страна обязательна!"}]}
       >
         <Select
           loading={loading}
@@ -171,14 +127,14 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
         label="Number"
         name="number"
         rules={[
-          { required: true, message: "Please input your number!" },
+          { required: true, message: "Заполните номер пилота!" },
           {
             validator: (_, value) => {
               if (!value || isNaN(value)) {
-                return Promise.reject("Please enter a valid number");
+                return Promise.reject("Введите правильн6ый номер");
               }
               if (value < 1 || value > 99) {
-                return Promise.reject("Number must be between 1 and 99");
+                return Promise.reject("Номер должен быть от 1 до 99");
               }
               return Promise.resolve();
             },
@@ -189,7 +145,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
           type="number"
           min={1}
           max={99}
-          onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
+          onKeyUp={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
         />
       </Form.Item>
 
@@ -201,101 +157,3 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
     </Form>
   );
 };
-
-// export const PilotFormCreate: FC<IPilotFormCreate> = ({onSuccess }) => {
-//   return (
-//     <Form
-//     name="basic"
-//     labelCol={{ span: 8 }}
-//     wrapperCol={{ span: 16 }}
-//     style={{ padding: "0 16px", maxWidth: "100%"}}
-//     initialValues={{ remember: true }}
-//     onFinish={onFinish}
-//     autoComplete="off"
-//   >
-//     <Form.Item<FieldType>
-//       label="First name"
-//       name="firstName"
-//       rules={[{ required: true, message: 'Please input your first name!' }]}
-//     >
-//       <Input />
-//     </Form.Item>
-
-//     <Form.Item<FieldType>
-//       label="Second name"
-//       name="secondName"
-//       rules={[{ required: true, message: 'Please input your second name!' }]}
-//     >
-//       <Input />
-//     </Form.Item>
-
-//     <Form.Item<FieldType>
-//       label="Status"
-//       name="status"
-//       rules={[{ required: true, message: 'Please input your status!' }]}
-//     >
-//       <Input />
-//     </Form.Item>
-
-//     <Form.Item<FieldType>
-//         label="Team"
-//         name="teamId"
-//         rules={[{ required: true }]}
-//       >
-//         <Select
-//           loading={loading}
-//           options={teams.map(team => ({
-//             label: team.title,
-//             value: team.id
-//           }))}
-//         />
-//       </Form.Item>
-
-//       <Form.Item<FieldType>
-//         label="Country"
-//         name="countryId"
-//         rules={[{ required: true }]}
-//       >
-//         <Select
-//           loading={loading}
-//           options={countries.map(country => ({
-//             label: country.title,
-//             value: country.id
-//           }))}
-//         />
-//       </Form.Item>
-
-//       <Form.Item<FieldType>
-//         label="Number"
-//         name="number"
-//         rules={[
-//           { required: true, message: 'Please input your number!' },
-//           {
-//             validator: (_, value) => {
-//               if (!value || isNaN(value)) {
-//                 return Promise.reject('Please enter a valid number');
-//               }
-//               if (value < 1 || value > 99) {
-//                 return Promise.reject('Number must be between 1 and 99');
-//               }
-//               return Promise.resolve();
-//             }
-//           }
-//         ]}
-//       >
-//         <Input
-//           type="number"
-//           min={1}
-//           max={99}
-//           onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
-//         />
-//       </Form.Item>
-
-//     <Form.Item label={null}>
-//       <Button type="primary" htmlType="submit">
-//         Submit
-//       </Button>
-//     </Form.Item>
-//   </Form>
-//   )
-// }

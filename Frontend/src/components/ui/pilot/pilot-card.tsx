@@ -1,5 +1,4 @@
 import { FC } from "react";
-// import styles from "./styles.module.css";
 import { PilotStatus } from "../../../entities/pilotStatus";
 import { PilotDto } from "../../../dtos/pilot-dto";
 import { Button, Card, Divider, Select, Space } from "antd";
@@ -7,36 +6,43 @@ import { Button, Card, Divider, Select, Space } from "antd";
 export interface IPilotCardProps {
   pilot: PilotDto;
   onStateChange?: (id: string) => void;
+  onDeletePilot?: (id: string) => void;
   onPosition?: (id: string, status: PilotStatus) => void;
 }
 
 export const PilotCard: FC<IPilotCardProps> = ({
   pilot,
   onStateChange,
-  onPosition,
+  onDeletePilot,
+  onPosition
 }) => {
   return (
     <Space>
       <Card
-        className="mob"
         style={{
           backgroundColor: "#ffccc7",
           textAlign: "center",
-          width: "100%",
-          maxWidth: "250px",
-          minWidth: "250px",
-          margin: "0 auto",
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          // width: "100%",
+          // maxWidth: "250px",
+          // minWidth: "250px",
+          // margin: "0 auto",
         }}
         title={pilot.team.title}
       >
-        <p style={{ margin: "8px 0" }}>
+        <p style={{ margin: "4px 0" }}>
           {pilot.firstName} {pilot.secondName} {pilot.number}
         </p>
-        <p style={{ margin: "8px 0" }}>
+        <p style={{ margin: "4px 0" }}>
           <PilotStatusCard status={pilot.status} />{" "}
+        </p>
+        <p style={{ margin: "4px 0" }}>
           {pilot.blocked ? "Blocked" : "Not blocked"}
         </p>
-        <p style={{ margin: "8px 0" }}>{pilot.country.title}</p>
+        <p style={{ margin: "4px 0" }}>{pilot.country.title}</p>
 
         <Divider style={{ borderColor: "red" }}>Change</Divider>
 
@@ -48,18 +54,22 @@ export const PilotCard: FC<IPilotCardProps> = ({
             justifyContent: "center",
           }}
         >
-          <Button onClick={() => onStateChange?.(pilot.id)}>
+          <Button onClick={() => onDeletePilot?.(pilot.id)} style={{maxWidth: "60px"}}>
+            {"Delete"}
+          </Button>
+          <Button onClick={() => onStateChange?.(pilot.id)} style={{maxWidth: "60px"}}>
             {pilot.blocked ? "Unblock" : "Block"}
           </Button>
           <Select
             value={pilot.status}
             onChange={(e) => onPosition?.(pilot.id, e as PilotStatus)}
-            style={{ minWidth: 120 }}
+            style={{ width: 120 }}
+            disabled={pilot.blocked === true}
           >
             {Object.values(PilotStatus).map((status) => (
-              <option key={status} value={status}>
+              <Select.Option key={status} value={status}>
                 {status}
-              </option>
+              </Select.Option>
             ))}
           </Select>
         </div>

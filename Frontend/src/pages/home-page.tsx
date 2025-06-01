@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 // import { Pilot } from "../entities/pilot";
 import {
   changePosition,
+  deletePilot,
   findAllPilots,
   makeBlockedPilot,
   makeUnBlockedPilot,
@@ -29,7 +30,6 @@ export const HomePage: FC = () => {
   };
 
   const onBlocked = async (pilot: PilotDto) => {
-    console.log(`Pilot ${pilot.id} change block`);
     await makeBlockedPilot(pilot.id);
     await fetchData();
   };
@@ -44,6 +44,12 @@ export const HomePage: FC = () => {
     console.log(`Pilot ${id} change Position`);
     console.log(status)
     await changePosition(id, status);
+    await fetchData();
+  };
+
+  const onDelete = async (id: string) => {
+    console.log(`Pilot ${id} delete`);
+    await deletePilot(id);
     await fetchData();
   };
 
@@ -65,6 +71,7 @@ export const HomePage: FC = () => {
                   onUpdate={(pilot) =>
                     pilot.blocked ? onUnblocked(pilot) : onBlocked(pilot)
                   } onPosition={onPosition}
+                  onDelete={onDelete}
                 />
               <PilotListWidget
                 pilots={pilots.filter((p) => p.status === PilotStatus.RESERVE)}
@@ -72,6 +79,7 @@ export const HomePage: FC = () => {
                 onUpdate={(pilot) =>
                   pilot.blocked ? onUnblocked(pilot) : onBlocked(pilot)
                 } onPosition={onPosition}
+                onDelete={onDelete}
               />
             </>
           ) : (

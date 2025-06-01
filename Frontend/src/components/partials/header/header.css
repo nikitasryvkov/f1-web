@@ -1,3 +1,30 @@
 .hed {
     background-color: red !important;
 }
+
+.header-style {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #cf1322;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 20px;
+}
+
+.header-style .title-style {
+    color: white;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    margin: 0;
+    font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+    .header-style {
+        padding: 10px;
+    }
+
+    .header-style .title-style {
+        font-size: 1.5rem;
+    }
+}

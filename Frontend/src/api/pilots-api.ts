@@ -58,3 +58,9 @@ export const changePosition = async (
 
   return data.data;
 };
+
+export const deletePilot = async (id: string): Promise<void> => {
+  const data = await http.delete(`${BASE_PATH}/delete/` + id);
+
+  return data.data;
+}
