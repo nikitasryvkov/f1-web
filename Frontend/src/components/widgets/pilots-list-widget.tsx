@@ -4,6 +4,7 @@ import { PilotDto } from "../../dtos/pilot-dto";
 import { PilotStatus } from "../../entities/pilotStatus";
 import Title from "antd/es/typography/Title";
 import { Col, Row } from "antd";
+import "./pilot-list-widget.css";
 
 export interface IActivePilotsWidgets {
   lable?: string;
@@ -34,44 +35,48 @@ export const PilotListWidget: FC<IActivePilotsWidgets> = ({
     }
   };
 
-    const onDeletePilot = (id: string) => {
+  const onDeletePilot = (id: string) => {
     const pilot = pilots.find((p) => p.id === id);
     if (pilot) {
       onDelete?.(id);
     }
   };
 
-  // return (
-  //   <>
-  //     <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16}}>
-  //       {lable && <Title>{lable}</Title>}
-  //     </div>
-
-  //     {pilots.map((p) => (
-  //       <PilotCard
-  //         pilot={p}
-  //         onStateChange={onBlockUpdate}
-  //         onPosition={onPositionState}
-  //         key={p.id}
-  //       />
-  //     ))}
-  //   </>
-    return (
-    <div >
+  return (
+    <div>
       {lable && <Title level={3}>{lable}</Title>}
-      
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          {pilots.map((p) => (
-            <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
-              <PilotCard
-                pilot={p}
-                onStateChange={onBlockUpdate}
-                onDeletePilot={onDeletePilot}
-                onPosition={onPositionState}
-              />
-            </Col>
-          ))}
-        </Row>
+
+      {/* <Row gutter={[16, 16]} className="pilot-row" style={{ marginTop: 16 }}>
+        {pilots.map((p) => (
+          <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
+            <PilotCard
+              pilot={p}
+              onStateChange={onBlockUpdate}
+              onDeletePilot={onDeletePilot}
+              onPosition={onPositionState}
+            />
+          </Col>
+        ))}
+      </Row> */}
+
+      <Row gutter={[16, 16]} className="pilot-row" style={{ marginTop: 16 }}>
+        {pilots.map((p) => (
+          <Col
+            key={p.id}
+            // xs={24} // Полная ширина на мобильных (ширина 24 колонок)
+            // sm={14} // Полсцены на планшетах
+            md={8} // Треть экрана на десктопах
+            lg={6} // Четверть экрана на больших мониторах
+          >
+            <PilotCard
+              pilot={p}
+              onStateChange={onBlockUpdate}
+              onDeletePilot={onDeletePilot}
+              onPosition={onPositionState}
+            />
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

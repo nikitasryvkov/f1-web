@@ -80,7 +80,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       </Form.Item>
 
       <Form.Item<FieldType>
-        label="Second name"
+        label="Last name"
         name="secondName"
         rules={[{ required: true, message: "Заполните фамилию пилота!" }]}
       >
@@ -90,7 +90,13 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Status"
         name="status"
-        rules={[{ required: true, message: "Заполните статус пилота (FIRST, SECOND, RESERVE)!" }]}
+        rules={[
+          {
+            required: true,
+            message: "Заполните статус пилота (FIRST, SECOND, RESERVE)!",
+          },
+        ]}
+        normalize={(value) => value?.toUpperCase() || ""}
       >
         <Input />
       </Form.Item>
@@ -112,7 +118,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
       <Form.Item<FieldType>
         label="Country"
         name="countryId"
-        rules={[{ required: true, message: "Страна обязательна!"}]}
+        rules={[{ required: true, message: "Страна обязательна!" }]}
       >
         <Select
           loading={loading}
@@ -131,7 +137,7 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
           {
             validator: (_, value) => {
               if (!value || isNaN(value)) {
-                return Promise.reject("Введите правильн6ый номер");
+                return Promise.reject("Введите правильный номер");
               }
               if (value < 1 || value > 99) {
                 return Promise.reject("Номер должен быть от 1 до 99");

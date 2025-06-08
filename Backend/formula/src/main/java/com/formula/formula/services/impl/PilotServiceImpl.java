@@ -46,9 +46,12 @@ public class PilotServiceImpl implements PilotService {
             }
         }
 
-        if (!checkAvailableSeats(pilotDto.getTeamId())) {
-            throw new PilotException.ResourseAlreadyExistsException(
-                    "The number of active pilots has reached its maximum!");
+        if (pilotDto.getStatus().equals(PilotStatusEnum.FIRST.toString())
+                || pilotDto.getStatus().equals(PilotStatusEnum.SECOND.toString())) {
+            if (!checkAvailableSeats(pilotDto.getTeamId())) {
+                throw new PilotException.ResourseAlreadyExistsException(
+                        "The number of active pilots has reached its maximum!");
+            }
         }
 
         pilotRepository.save(pilotMapper.toPilot(pilotDto));

@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from "react";
-// import { Pilot } from "../entities/pilot";
 import {
   changePosition,
   deletePilot,
@@ -11,11 +10,13 @@ import { PilotStatus } from "../entities/pilotStatus";
 import { PilotListWidget } from "../components/widgets/pilots-list-widget";
 import { PilotDto } from "../dtos/pilot-dto";
 import Title from "antd/es/typography/Title";
-import { Col, Row } from "antd";
+import { Col, Row, Select } from "antd";
 import { PilotFormCreate } from "../components/ui/pilot/pilot-form-create";
 
 export const HomePage: FC = () => {
   const [pilots, setPilots] = useState<PilotDto[]>([]);
+  const [sortField, setSortField] = useState<keyof PilotDto>("firstName");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     fetchData();
@@ -26,8 +27,23 @@ export const HomePage: FC = () => {
     setPilots(() => {
       return data;
     });
-    console.log(data);
   };
+
+  const sortedPilots = [...pilots].sort((a, b) => {
+    const field = sortField as keyof PilotDto;
+    const valueA = a[field];
+    const valueB = b[field];
+
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      return sortOrder === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    }
+
+    if (valueA < valueB) return sortOrder === "asc" ? -1 : 1;
+    if (valueA > valueB) return sortOrder === "asc" ? 1 : -1;
+    return 0;
+  });
 
   const onBlocked = async (pilot: PilotDto) => {
     await makeBlockedPilot(pilot.id);
@@ -35,50 +51,73 @@ export const HomePage: FC = () => {
   };
 
   const onUnblocked = async (pilot: PilotDto) => {
-    console.log(`Pilot ${pilot.id} change Unblock`);
     await makeUnBlockedPilot(pilot.id);
     await fetchData();
   };
 
   const onPosition = async (id: string, status: PilotStatus) => {
-    console.log(`Pilot ${id} change Position`);
-    console.log(status)
     await changePosition(id, status);
     await fetchData();
   };
 
   const onDelete = async (id: string) => {
-    console.log(`Pilot ${id} delete`);
     await deletePilot(id);
     await fetchData();
   };
 
   return (
-    <Row justify="center" gutter={[16, 16]}>
+    <Row gutter={[16, 16]}>
       <Col xs={24} md={16}>
         <>
-          <Title style={{textAlign: "center", padding: "0 16px"}}>Managed team</Title>
+          <Title style={{ textAlign: "center", padding: "0 16px" }}>
+            Managed team
+          </Title>
 
-          {pilots.length > 0 ? (
+          <Select
+            value={sortField}
+            onChange={(value) => setSortField(value)}
+            style={{ width: 150, marginRight: 8 }}
+          >
+            <Select.Option value="firstName">Name</Select.Option>
+            <Select.Option value="status">Status</Select.Option>
+            <Select.Option value="blocked">Blocked</Select.Option>
+            <Select.Option value="country">Country</Select.Option>
+            <Select.Option value="team">Team</Select.Option>
+          </Select>
+
+          <Select
+            value={sortOrder}
+            onChange={(value) => setSortOrder(value)}
+            style={{ width: 100 }}
+          >
+            <Select.Option value="asc">Asc</Select.Option>
+            <Select.Option value="desc">Desc</Select.Option>
+          </Select>
+
+          {sortedPilots.length > 0 ? (
             <>
               <PilotListWidget
-                  pilots={pilots.filter(
-                    (p) =>
-                      p.status === PilotStatus.FIRST ||
-                      p.status === PilotStatus.SECOND
-                  )}
-                  lable="Active pilots"
-                  onUpdate={(pilot) =>
-                    pilot.blocked ? onUnblocked(pilot) : onBlocked(pilot)
-                  } onPosition={onPosition}
-                  onDelete={onDelete}
-                />
+                pilots={sortedPilots.filter(
+                  (p) =>
+                    p.status === PilotStatus.FIRST ||
+                    p.status === PilotStatus.SECOND
+                )}
+                lable="Active pilots"
+                onUpdate={(pilot) =>
+                  pilot.blocked ? onUnblocked(pilot) : onBlocked(pilot)
+                }
+                onPosition={onPosition}
+                onDelete={onDelete}
+              />
               <PilotListWidget
-                pilots={pilots.filter((p) => p.status === PilotStatus.RESERVE)}
+                pilots={sortedPilots.filter(
+                  (p) => p.status === PilotStatus.RESERVE
+                )}
                 lable="Reserve pilots"
                 onUpdate={(pilot) =>
                   pilot.blocked ? onUnblocked(pilot) : onBlocked(pilot)
-                } onPosition={onPosition}
+                }
+                onPosition={onPosition}
                 onDelete={onDelete}
               />
             </>
@@ -88,8 +127,10 @@ export const HomePage: FC = () => {
         </>
       </Col>
       <Col xs={24} md={8}>
-          <Title style={{textAlign: "center", padding: "0 16px"}}> Create Pilot</Title>
-          <PilotFormCreate onSuccess={fetchData}/>
+        <Title style={{ textAlign: "center", padding: "0 16px" }}>
+          Create Pilot
+        </Title>
+        <PilotFormCreate onSuccess={fetchData} />
       </Col>
     </Row>
   );

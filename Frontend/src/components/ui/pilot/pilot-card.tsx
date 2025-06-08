@@ -14,7 +14,7 @@ export const PilotCard: FC<IPilotCardProps> = ({
   pilot,
   onStateChange,
   onDeletePilot,
-  onPosition
+  onPosition,
 }) => {
   return (
     <Space>
@@ -22,14 +22,11 @@ export const PilotCard: FC<IPilotCardProps> = ({
         style={{
           backgroundColor: "#ffccc7",
           textAlign: "center",
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          // width: "100%",
-          // maxWidth: "250px",
-          // minWidth: "250px",
-          // margin: "0 auto",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          width: "100%",
         }}
         title={pilot.team.title}
       >
@@ -37,7 +34,7 @@ export const PilotCard: FC<IPilotCardProps> = ({
           {pilot.firstName} {pilot.secondName} {pilot.number}
         </p>
         <p style={{ margin: "4px 0" }}>
-          <PilotStatusCard status={pilot.status} />{" "}
+          <PilotStatusCard status={pilot.status} />
         </p>
         <p style={{ margin: "4px 0" }}>
           {pilot.blocked ? "Blocked" : "Not blocked"}
@@ -54,11 +51,12 @@ export const PilotCard: FC<IPilotCardProps> = ({
             justifyContent: "center",
           }}
         >
-          <Button onClick={() => onDeletePilot?.(pilot.id)} style={{maxWidth: "60px"}}>
+          <Button
+            onClick={() => onDeletePilot?.(pilot.id)}
+            style={{ maxWidth: "60px" }}
+            disabled={pilot.blocked === true}
+          >
             {"Delete"}
-          </Button>
-          <Button onClick={() => onStateChange?.(pilot.id)} style={{maxWidth: "60px"}}>
-            {pilot.blocked ? "Unblock" : "Block"}
           </Button>
           <Select
             value={pilot.status}
@@ -72,6 +70,12 @@ export const PilotCard: FC<IPilotCardProps> = ({
               </Select.Option>
             ))}
           </Select>
+          <Button
+            onClick={() => onStateChange?.(pilot.id)}
+            style={{ maxWidth: "60px" }}
+          >
+            {pilot.blocked ? "Unblock" : "Block"}
+          </Button>
         </div>
       </Card>
     </Space>

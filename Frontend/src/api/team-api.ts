@@ -16,10 +16,6 @@ export const fetchTeam = async (teamId: string): Promise<Team> => {
 };
 
 export const fetchTeams = async (): Promise<TeamDto[]> => {
-  try {
-    const { data } = await http.get(`${BASE_PATH}/all`);
-    return data;
-  } catch (error) {
-    throw new Error('Failed to fetch teams');
-  }
+  const { data } = await http.get(`${BASE_PATH}/all`);
+  return data;
 };
