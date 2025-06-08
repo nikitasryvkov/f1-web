@@ -129,30 +129,8 @@ export const PilotFormCreate: FC<IPilotFormCreate> = ({ onSuccess }) => {
         />
       </Form.Item>
 
-      <Form.Item<FieldType>
-        label="Number"
-        name="number"
-        rules={[
-          { required: true, message: "Заполните номер пилота!" },
-          {
-            validator: (_, value) => {
-              if (!value || isNaN(value)) {
-                return Promise.reject("Введите правильный номер");
-              }
-              if (value < 1 || value > 99) {
-                return Promise.reject("Номер должен быть от 1 до 99");
-              }
-              return Promise.resolve();
-            },
-          },
-        ]}
-      >
-        <Input
-          type="number"
-          min={1}
-          max={99}
-          onKeyUp={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
-        />
+      <Form.Item<FieldType> label="Number" name="number">
+        <Input type="number" min={1} max={99} />
       </Form.Item>
 
       <Form.Item label={null}>

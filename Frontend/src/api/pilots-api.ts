@@ -1,8 +1,6 @@
 import { PilotDto } from "../dtos/pilot-dto";
-// import { PilotStatusDto } from "../dtos/pilot-status-dto";
 import { Pilot } from "../entities/pilot";
 import { PilotStatus } from "../entities/pilotStatus";
-// import { Pilot } from "../entities/pilot";
 import { http } from "./common";
 import { fetchCountry } from "./country-api";
 import { fetchTeam } from "./team-api";
@@ -63,4 +61,4 @@ export const deletePilot = async (id: string): Promise<void> => {
   const data = await http.delete(`${BASE_PATH}/delete/` + id);
 
   return data.data;
-}
+};
